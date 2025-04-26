@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
-    userType: "user" // default to user
+    pwd: "",
+    login_type: "customer" // default to customer
   });
 
   const handleChange = (e) => {
@@ -21,14 +22,33 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log("Login attempt:", formData);
     
-    
-    if (formData.userType === "user") {
-      window.location.href = "/user/dashboard";
-    
-    } else {
-      window.location.href = "/app/Emp/Dashboard";
+    const res = await fetch('/api/authenticate',{method:'POST',body:JSON.stringify(formData)});
+
+    if(res){
+      const data = await res.json();
+      
+      if(data && res.status){
+        const token = data.token;
+        // console.log(token)
+        if(token){
+          const token_obj = jwtDecode(token);
+          if(token_obj.type==='employee'){
+            location.href = '/emp/dashboard'
+          }
+          else{
+            location.href = '/customer/dashboard'
+          }
+        }
+        else
+          console.log("Invalid Token");
+      }
+      else{
+        console.log("Invalid Credentials");
+      }
+    }
+    else{
+      console.log("Invalid Credentials");
     }
   };
 
@@ -58,17 +78,17 @@ const Login = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="pwd" className="sr-only">
                 Password
               </label>
               <input
-                id="password"
-                name="password"
+                id="pwd"
+                name="pwd"
                 type="password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={formData.password}
+                value={formData.pwd}
                 onChange={handleChange}
               />
             </div>
@@ -77,12 +97,12 @@ const Login = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700">Login as:</label>
             <select
-              name="userType"
-              value={formData.userType}
+              name="login_type"
+              value={formData.login_type}
               onChange={handleChange}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option value="user">User</option>
+              <option value="customer">customer</option>
               <option value="employee">Employee</option>
             </select>
           </div>
