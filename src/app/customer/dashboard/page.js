@@ -51,30 +51,32 @@ const Dashboard = () => {
   const [showCart, setShowCart] = useState(false);
 
   const updateQuantity = (id, change) => {
-    setFoodItems(items =>
-      items.map(item =>
-        item.id === id
+    setFoodItems(prevItems => 
+      prevItems.map(item => 
+        item.id === id 
           ? { ...item, quantity: Math.max(1, item.quantity + change) }
           : item
       )
     );
   };
 
-
   const addToCart = (item) => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id);
     if (existingItem) {
-      setCart(cart.map(cartItem =>
-        cartItem.id === item.id
-          ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
-          : cartItem
-      ));
+      setCart(prevCart => 
+        prevCart.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
+            : cartItem
+        )
+      );
     } else {
-      setCart([...cart, { ...item }]);
+      setCart(prevCart => [...prevCart, { ...item }]);
     }
     
-    setFoodItems(items =>
-      items.map(foodItem =>
+   
+    setFoodItems(prevItems =>
+      prevItems.map(foodItem =>
         foodItem.id === item.id
           ? { ...foodItem, quantity: 1 }
           : foodItem
@@ -83,15 +85,17 @@ const Dashboard = () => {
   };
 
   const removeFromCart = (id) => {
-    setCart(cart.filter(item => item.id !== id));
+    setCart(prevCart => prevCart.filter(item => item.id !== id));
   };
 
   const updateCartQuantity = (id, change) => {
-    setCart(cart.map(item =>
-      item.id === id
-        ? { ...item, quantity: Math.max(1, item.quantity + change) }
-        : item
-    ));
+    setCart(prevCart => 
+      prevCart.map(item =>
+        item.id === id
+          ? { ...item, quantity: Math.max(1, item.quantity + change) }
+          : item
+      )
+    );
   };
 
   const getTotalAmount = () => {
@@ -100,7 +104,6 @@ const Dashboard = () => {
     return total;
   };
    
-
   useEffect(()=>{
     const fetchData = async () => {
       try {
