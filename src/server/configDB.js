@@ -86,23 +86,25 @@ export const updateRole = async (obj) => {
 
 }
 
-const addOrder = async (obj) => {
+export const placeOrder = async (obj) => {
     let flag = null;
     
-        const collection = client.db("CanteenProject").collection("orders");
-        const d = new Date();
-        let date = d.toLocaleDateString() + " " + d.toLocaleTimeString();
-        await Promise.resolve(collection.insertOne({
-            _id: obj["orderID"],
-            "email": obj["email"],
-            "name": obj["name"],
-            "order": obj["orderDetails"],
-            "order_time": date
-        }).then(() => {
-            flag = 1;
-        }).catch((err) => {
-            flag = 0;
-        }));
+    // const collection = client.db("workload_management").collection('orders');
+    //     const d = new Date();
+    //     let date = d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    //     await Promise.resolve(collection.insertOne({
+    //         _id: obj["orderID"],
+    //         "email": obj["email"],
+    //         "name": obj["name"],
+    //         "order": obj["orderDetails"],
+    //         "order_time": date
+    //     }).then(() => {
+    //         flag = 1;
+    //     }).catch((err) => {
+    //         flag = 0;
+    //     }));
+
+    console.log(obj)
     
     return flag;
 }

@@ -53,7 +53,7 @@ const Dashboard = () => {
   const updateQuantity = (id, change) => {
     setFoodItems(prevItems => 
       prevItems.map(item => 
-        item.id === id 
+        item._id === id 
           ? { ...item, quantity: Math.max(1, item.quantity + change) }
           : item
       )
@@ -61,11 +61,11 @@ const Dashboard = () => {
   };
 
   const addToCart = (item) => {
-    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+    const existingItem = cart.find(cartItem => cartItem._id === item._id);
     if (existingItem) {
       setCart(prevCart => 
         prevCart.map(cartItem =>
-          cartItem.id === item.id
+          cartItem._id === item._id
             ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
             : cartItem
         )
@@ -77,7 +77,7 @@ const Dashboard = () => {
    
     setFoodItems(prevItems =>
       prevItems.map(foodItem =>
-        foodItem.id === item.id
+        foodItem._id === item._id
           ? { ...foodItem, quantity: 1 }
           : foodItem
       )
@@ -85,13 +85,13 @@ const Dashboard = () => {
   };
 
   const removeFromCart = (id) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== id));
+    setCart(prevCart => prevCart.filter(item => item._id !== id));
   };
 
   const updateCartQuantity = (id, change) => {
     setCart(prevCart => 
       prevCart.map(item =>
-        item.id === id
+        item._id === id
           ? { ...item, quantity: Math.max(1, item.quantity + change) }
           : item
       )
@@ -103,6 +103,10 @@ const Dashboard = () => {
     window.localStorage.setItem('totalAmount', total);
     return total;
   };
+
+  const place_order = async () => {
+    const res = await fetch('/api/place-order',{method:'POST','body':JSON.stringify(cart)});
+  }
    
   useEffect(()=>{
     const fetchData = async () => {
@@ -147,7 +151,7 @@ const Dashboard = () => {
           ) : (
             <>
               {cart.map((item) => (
-                <div key={item.id} className="flex items-center justify-between py-2 border-b">
+                <div key={item._id} className="flex items-center justify-between py-2 border-b">
                   <div>
                     <h3 className="font-semibold">{item.name}</h3>
                     <p className="text-gray-600">₹{item.price}</p>
@@ -155,14 +159,14 @@ const Dashboard = () => {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <button
-                        onClick={() => updateCartQuantity(item.id, -1)}
+                        onClick={() => updateCartQuantity(item._id, -1)}
                         className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
                       >
                         -
                       </button>
                       <span>{item.quantity}</span>
                       <button
-                        onClick={() => updateCartQuantity(item.id, 1)}
+                        onClick={() => updateCartQuantity(item._id, 1)}
                         className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
                       >
                         +
@@ -170,7 +174,7 @@ const Dashboard = () => {
                     </div>
                     <p className="font-semibold">₹{item.price * item.quantity}</p>
                     <button
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item._id)}
                       className="text-red-600 hover:text-red-800"
                     >
                       Remove
@@ -181,7 +185,7 @@ const Dashboard = () => {
               <div className="mt-4 flex justify-between items-center">
                 <p className="text-xl font-bold">Total: ₹{getTotalAmount()}</p>
                 <button 
-                  onClick={() => window.location.href = '/user/checkout'}
+                  onClick={place_order()}
                   className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
                 >
                   Checkout
@@ -194,7 +198,7 @@ const Dashboard = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {foodItems.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-md p-4">
+          <div key={item._id} className="bg-white rounded-lg shadow-md p-4">
             <div className="h-48 bg-gray-200 rounded-md mb-4">
              
             </div>
@@ -219,7 +223,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between mt-4">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => updateQuantity(item.id, -1)}
+                  onClick={() => updateQuantity(item._id, -1)}
                   disabled={!item.available || item.quantity <= 1}
                   className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
                 >
@@ -227,7 +231,7 @@ const Dashboard = () => {
                 </button>
                 <span className="w-8 text-center">{item.quantity}</span>
                 <button
-                  onClick={() => updateQuantity(item.id, 1)}
+                  onClick={() => updateQuantity(item._id, 1)}
                   disabled={!item.available}
                   className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 disabled:opacity-50"
                 >
