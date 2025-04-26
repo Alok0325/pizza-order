@@ -31,7 +31,7 @@ const Checkout = () => {
   
     setTimeout(() => {
      
-      const isSuccess = Math.random() > 0.3;
+      
       setPaymentStatus(isSuccess ? "success" : "failed");
       
       if (isSuccess) {

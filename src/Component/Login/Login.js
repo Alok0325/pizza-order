@@ -7,7 +7,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    userType: "user" // default to user
+    userType: "user" 
   });
 
   const handleChange = (e) => {
