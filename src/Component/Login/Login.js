@@ -28,7 +28,7 @@ const Login = () => {
       window.location.href = "/user/dashboard";
     
     } else {
-      window.location.href = "/app/Emp/dashboard";
+      window.location.href = "/Emp/dashboard";
     }
   };
 
