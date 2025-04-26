@@ -46,6 +46,31 @@ export const login = async (obj) => {
     }
 }
 
+export const fetchItems = async () => {
+    
+    const collection = client.db("workload_management").collection('items');
+
+    const res = await collection.find({}).toArray();
+
+    return res;
+}
+
+export const fetchRole = async (obj) => {
+    
+    const collection = client.db("workload_management").collection('roles');
+
+    const res = await collection.find({}).toArray();
+
+    for(let i =0;i<res.length;i++){
+        if(res[i].employees.length>0){
+            let idx = obj.findIndex(ob => ob._id === res[i]._id);
+            obj[idx]['available'] = true;
+        }
+    }
+
+    return obj;
+}
+
 export const updateRole = async (obj) => {
     
     const collection = client.db("workload_management").collection('roles');

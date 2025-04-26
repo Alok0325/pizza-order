@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/Component/Header/Header";
 
 const Dashboard = () => {
@@ -8,7 +8,7 @@ const Dashboard = () => {
       id: 1,
       name: "Veg Pizza",
       price: 299,
-      category: "veg",
+      category: "v_pizza",
       available: true,
       quantity: 1
     },
@@ -16,7 +16,7 @@ const Dashboard = () => {
       id: 2, 
       name: "Non-Veg Pizza",
       price: 399,
-      category: "non-veg",
+      category: "nv_pizza",
       available: true,
       quantity: 1
     },
@@ -24,40 +24,24 @@ const Dashboard = () => {
       id: 3,
       name: "Veg Burger",
       price: 149,
-      category: "veg", 
-      available: false,
+      category: "burger", 
+      available: true,
+      quantity: 1
+    },
+    {
+      id: 4,
+      name: "Sandwich",
+      price: 149,
+      category: "sandwich", 
+      available: true,
       quantity: 1
     },
      
     {
-      id: 4,
-      name: "Non-Veg Burger",
-      price: 199,
-      category: "non-veg",
-      available: true,
-      quantity: 1
-    },
-    {
       id: 5,
-      name: "Cold-Coffee",
-      price: 149,
-      category: "Drink",
-      available: true,
-      quantity: 1
-    },
-    {
-      id: 6,
       name: "Cold-Drink",
       price: 59,
-      category: "Drink",
-      available: true,
-      quantity: 1
-    },
-    {
-      id: 7,
-      name: "Sack",
-      price: 159,
-      category: "Drink",
+      category: "drinks",
       available: true,
       quantity: 1
     }
@@ -116,6 +100,27 @@ const Dashboard = () => {
     return total;
   };
    
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/check-availability');
+        if (!res.ok) {
+          throw new Error(`Error in fetch`);
+        }
+        const data = await res.json();
+        for (let i=0;i<data.data.length;i++){
+          data.data[i]['quantity'] = 1;
+        }
+        console.log(data.data)
+        setFoodItems(data.data);
+      } catch (e) {
+        console.log("Error"+e);
+      }
+    };
+
+    fetchData();
+  },[]);
 
   return (
     <>
