@@ -25,9 +25,10 @@ const Login = () => {
     
     
     if (formData.userType === "user") {
-      router.push("/dashboard/user");
+      window.location.href = "/user/dashboard";
+    
     } else {
-      router.push("/dashboard/employee");
+      window.location.href = "/app/Emp/Dashboard";
     }
   };
 
